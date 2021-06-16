@@ -17,61 +17,33 @@ typedef long long ll;
 const ll mod=1e9+7;
 //freopen("1.txt", "r", stdin);
 
-bool ok1;
-vector<int> V[100010];
-int N, A, B, B1, A1;
-vector<int> C;
+int N, qtd[2];
+vi V[100005];
 
-void dfs(int K){
-    int i;
-
-    for(i=0;i<V[K].size();i++){
-        int D;
-        D=V[K][i];
-        if(C[D]!=0){
-            if(C[D]==C[K]){
-                ok1=false;
-                break;
-            }
-        }
-        else{
-            if(C[K]==1){
-                C[D]=2;
-                B1++;
-                dfs(D);
-            }
-            else{
-                C[D]=1;
-                A1++;
-                dfs(D);
-            }
-        }
+void dfs(int A,int pai,int cor){
+    qtd[cor]++;
+    for(auto v : V[A]){
+        if(v==pai) continue;
+        dfs(v,A,cor^1);
     }
-    return;
 }
 
-
 int main(){_
-
     cin>>N;
-    C.resize(N+1);
-    ok1=true;
-    int i;
 
-    for(i=1;i<N;i++){
+    for(int i=1;i<N;i++){
+        int A, B;
         cin>>A>>B;
-        V[A].push_back(B);
-        V[B].push_back(A);
+        V[A].eb(B);
+        V[B].eb(A);
     }
 
-    C[1]=1;
-    A1++;
-    dfs(1);
+    dfs(1,1,0);
 
-    if(ok1 && A1==B1)
-        cout<<"Y"<<endl;
+    if(qtd[1]==qtd[0])
+        cout<<'Y'<<'\n';
     else
-        cout<<"N"<<endl;
+        cout<<'N'<<'\n';
 
     return 0;
 
